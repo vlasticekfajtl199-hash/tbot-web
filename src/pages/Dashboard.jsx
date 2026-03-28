@@ -10,12 +10,12 @@ const PROFILE_REFRESH_INTERVAL_MS = 15000
 const SIMULATE_PAYMENT_ENDPOINT = 'https://api.tbotsystem.eu/simulate-payment'
 
 function formatPaymentStatus(paymentStatus) {
-  return paymentStatus === 'paid' ? 'Payment Complete' : 'Unpaid'
+  return paymentStatus === 'paid' ? 'Paid' : 'Unpaid'
 }
 
 function formatBetaStatus(betaStatus, paymentStatus) {
-  if (paymentStatus === 'paid') return 'Beta Access Active'
-  return betaStatus === 'active' ? 'Beta Access Active' : 'Pending'
+  if (paymentStatus === 'paid') return 'Active'
+  return betaStatus === 'active' ? 'Active' : 'Pending'
 }
 
 export default function DashboardPage() {
@@ -23,55 +23,37 @@ export default function DashboardPage() {
   const { user, signOut } = useAuth()
   const [profile, setProfile] = useState(null)
   const [isLoadingProfile, setIsLoadingProfile] = useState(true)
-  const [profileError, setProfileError] = useState('')
-  const [usedFallbackProfile, setUsedFallbackProfile] = useState(false)
+  const [profileWarning, setProfileWarning] = useState('')
+  const [requestError, setRequestError] = useState('')
   const [isSimulatingPayment, setIsSimulatingPayment] = useState(false)
 
-  useEffect(() => {
-    let mounted = true
+  const refreshProfile = async ({ showLoader = false } = {}) => {
+    if (!user) return
 
-    const fetchProfile = async ({ showLoader = false } = {}) => {
-      if (!user) return
-
-      if (showLoader) {
-        setIsLoadingProfile(true)
-      }
-
-      const { profile: nextProfile, error, usedFallback } = await getUserProfile(user)
-
-      if (!mounted) return
-
-      setProfile(nextProfile)
-      setUsedFallbackProfile(usedFallback)
-      setProfileError(
-        error ? 'Profile data is temporarily unavailable. Showing fallback account state.' : ''
-      )
-      setIsLoadingProfile(false)
+    if (showLoader) {
+      setIsLoadingProfile(true)
     }
 
-    fetchProfile({ showLoader: true })
+    const { profile: nextProfile, error } = await getUserProfile(user)
+
+    setProfile(nextProfile)
+    setProfileWarning(error)
+    setIsLoadingProfile(false)
+  }
+
+  useEffect(() => {
+    if (!user) return
+
+    refreshProfile({ showLoader: true })
 
     const intervalId = window.setInterval(() => {
-      fetchProfile()
+      refreshProfile()
     }, PROFILE_REFRESH_INTERVAL_MS)
 
     return () => {
-      mounted = false
       window.clearInterval(intervalId)
     }
   }, [user])
-
-  const refreshProfile = async () => {
-    if (!user) return
-
-    const { profile: nextProfile, error, usedFallback } = await getUserProfile(user)
-
-    setProfile(nextProfile)
-    setUsedFallbackProfile(usedFallback)
-    setProfileError(
-      error ? 'Profile data is temporarily unavailable. Showing fallback account state.' : ''
-    )
-  }
 
   const handleLogout = async () => {
     await signOut()
@@ -82,7 +64,7 @@ export default function DashboardPage() {
     if (!user) return
 
     setIsSimulatingPayment(true)
-    setProfileError('')
+    setRequestError('')
 
     try {
       const response = await fetch(SIMULATE_PAYMENT_ENDPOINT, {
@@ -95,13 +77,19 @@ export default function DashboardPage() {
         }),
       })
 
-      if (!response.ok) {
-        throw new Error('Simulate payment request failed.')
+      const result = await response.json()
+
+      if (!response.ok || result.success !== true) {
+        throw new Error(result.message || 'Simulate payment request failed.')
       }
 
       await refreshProfile()
     } catch (error) {
-      setProfileError('Test payment update failed. Please verify VPS connectivity and backend response.')
+      setRequestError(
+        error instanceof Error
+          ? error.message
+          : 'Simulate payment request failed. Please try again.'
+      )
     } finally {
       setIsSimulatingPayment(false)
     }
@@ -145,9 +133,15 @@ export default function DashboardPage() {
             </button>
           </section>
 
-          {profileError ? (
+          {profileWarning ? (
             <div className="mb-6 rounded-lg border border-warning-amber/20 bg-warning-amber/5 px-4 py-3 text-sm text-warning-amber">
-              {profileError}
+              {profileWarning}
+            </div>
+          ) : null}
+
+          {requestError ? (
+            <div className="mb-6 rounded-lg border border-warning-amber/20 bg-warning-amber/5 px-4 py-3 text-sm text-warning-amber">
+              {requestError}
             </div>
           ) : null}
 
@@ -172,12 +166,6 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </div>
-
-              {usedFallbackProfile ? (
-                <p className="mt-6 text-code-grey/60 text-sm leading-relaxed">
-                  Live profile sync is not fully available right now. Account details are shown from your auth session.
-                </p>
-              ) : null}
             </div>
 
             <div className="monolith-card rounded-lg p-8">
@@ -190,7 +178,7 @@ export default function DashboardPage() {
               </div>
               <p className="mt-4 text-code-grey leading-relaxed">
                 {isPaid
-                  ? 'Your beta access is active and payment has been marked as complete.'
+                  ? 'Your beta access is active and payment has been recorded.'
                   : 'Your account is registered and waiting for payment to activate beta access.'}
               </p>
             </div>
