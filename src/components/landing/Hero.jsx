@@ -1,5 +1,4 @@
 import { ArrowRight, Play } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 export default function Hero() {
   return (
@@ -45,16 +44,14 @@ export default function Hero() {
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link
-                to="/beta"
-                className="group inline-flex items-center gap-2 border-2 border-neon text-neon font-inter font-semibold px-6 py-3 rounded-lg hover:bg-neon hover:text-void transition-all duration-300 text-sm tracking-wide"
+              <a
+                href="https://buy.stripe.com/14A28r2VKcRv67ucvNb3q00"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#00FF9C] text-black px-6 py-3 rounded-xl font-bold hover:opacity-80 transition"
               >
-                Request Beta Access
-                <ArrowRight
-                  size={16}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
+                Join Beta
+              </a>
               <a
                 href="#metrics"
                 className="inline-flex items-center gap-2 border-2 border-card-border text-code-grey font-inter font-medium px-6 py-3 rounded-lg hover:border-code-grey/50 hover:text-data-white transition-all duration-300 text-sm"
