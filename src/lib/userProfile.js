@@ -28,6 +28,10 @@ export async function getUserProfile(user) {
     .maybeSingle()
 
   if (error) {
+    console.error('Supabase profile fetch failed:', {
+      userId: user.id,
+      error,
+    })
     return {
       profile: fallbackProfile,
       error: 'Unable to load profile data from Supabase.',
@@ -35,6 +39,9 @@ export async function getUserProfile(user) {
   }
 
   if (!data) {
+    console.error('Supabase profile row not found:', {
+      userId: user.id,
+    })
     return {
       profile: fallbackProfile,
       error: 'Profile row was not found for the current user.',

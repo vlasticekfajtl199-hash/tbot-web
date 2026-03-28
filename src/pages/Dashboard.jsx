@@ -4,6 +4,7 @@ import NavBar from '../components/landing/NavBar'
 import Footer from '../components/landing/Footer'
 import { useAuth } from '../lib/AuthContext'
 import { getUserProfile } from '../lib/userProfile'
+import { supabase } from '../supabaseClient'
 
 const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/14A28r2VKcRv67ucvNb3q00'
 const PROFILE_REFRESH_INTERVAL_MS = 15000
@@ -20,30 +21,46 @@ function formatBetaStatus(betaStatus, paymentStatus) {
 
 export default function DashboardPage() {
   const navigate = useNavigate()
-  const { user, signOut } = useAuth()
+  const { signOut } = useAuth()
   const [profile, setProfile] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null)
   const [isLoadingProfile, setIsLoadingProfile] = useState(true)
   const [profileWarning, setProfileWarning] = useState('')
   const [requestError, setRequestError] = useState('')
   const [isSimulatingPayment, setIsSimulatingPayment] = useState(false)
 
   const refreshProfile = async ({ showLoader = false } = {}) => {
-    if (!user) return
-
     if (showLoader) {
       setIsLoadingProfile(true)
     }
 
-    const { profile: nextProfile, error } = await getUserProfile(user)
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
 
+    if (authError) {
+      console.error('Supabase auth getUser failed:', authError)
+      setProfileWarning('Unable to resolve the authenticated user.')
+      setIsLoadingProfile(false)
+      return
+    }
+
+    if (!user) {
+      setProfileWarning('No authenticated user was found.')
+      setIsLoadingProfile(false)
+      return
+    }
+
+    setCurrentUser(user)
+
+    const { profile: nextProfile, error } = await getUserProfile(user)
     setProfile(nextProfile)
     setProfileWarning(error)
     setIsLoadingProfile(false)
   }
 
   useEffect(() => {
-    if (!user) return
-
     refreshProfile({ showLoader: true })
 
     const intervalId = window.setInterval(() => {
@@ -53,7 +70,7 @@ export default function DashboardPage() {
     return () => {
       window.clearInterval(intervalId)
     }
-  }, [user])
+  }, [])
 
   const handleLogout = async () => {
     await signOut()
@@ -61,7 +78,7 @@ export default function DashboardPage() {
   }
 
   const handleSimulatePaymentSuccess = async () => {
-    if (!user) return
+    if (!currentUser) return
 
     setIsSimulatingPayment(true)
     setRequestError('')
@@ -73,18 +90,34 @@ export default function DashboardPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: user.id,
+          user_id: currentUser.id,
         }),
       })
 
-      const result = await response.json()
+      const responseText = await response.text()
+      let result = null
 
-      if (!response.ok || result.success !== true) {
-        throw new Error(result.message || 'Simulate payment request failed.')
+      try {
+        result = responseText ? JSON.parse(responseText) : null
+      } catch (parseError) {
+        console.error('Simulate payment response JSON parse failed:', {
+          parseError,
+          responseText,
+        })
+      }
+
+      if (!response.ok || result?.success !== true) {
+        console.error('Simulate payment request failed:', {
+          status: response.status,
+          responseText,
+          result,
+        })
+        throw new Error(result?.message || 'Simulate payment request failed.')
       }
 
       await refreshProfile()
     } catch (error) {
+      console.error('Simulate payment network failure:', error)
       setRequestError(
         error instanceof Error
           ? error.message
@@ -155,7 +188,7 @@ export default function DashboardPage() {
                   <div className="font-mono text-xs text-code-grey/50 uppercase tracking-widest">
                     Logged in as
                   </div>
-                  <div className="mt-2 text-data-white">{profile.email || user?.email}</div>
+                  <div className="mt-2 text-data-white">{profile.email || currentUser?.email}</div>
                 </div>
                 <div>
                   <div className="font-mono text-xs text-code-grey/50 uppercase tracking-widest">
