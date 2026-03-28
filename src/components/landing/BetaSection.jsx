@@ -1,5 +1,4 @@
 import { Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const benefits = [
   'Access to a private Telegram beta group',
@@ -54,12 +53,14 @@ export default function BetaSection() {
         </div>
 
         <div className="mt-12">
-          <Link
-            to="/contact"
+          <a
+            href="https://buy.stripe.com/14A28r2VKcRv67ucvNb3q00"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-neon text-void font-inter font-semibold px-8 py-4 rounded-lg hover:bg-neon/90 transition-all duration-300 text-sm tracking-wide uppercase"
           >
-            Request Beta Access
-          </Link>
+            Continue to Payment
+          </a>
 
           <p className="mt-4 font-mono text-xs text-code-grey/40">
             No upfront payment - access is reviewed manually during beta

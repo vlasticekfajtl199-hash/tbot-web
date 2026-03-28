@@ -1,4 +1,6 @@
 import { ArrowRight, Play } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import BetaAvailability from './BetaAvailability';
 
 export default function Hero() {
   return (
@@ -21,44 +23,45 @@ export default function Hero() {
             </div>
 
             <h1 className="font-inter font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-data-white leading-none tracking-tight">
-              Tbot<span className="text-neon">.</span>
+              Automated BTC
               <br />
-              <span className="text-code-grey">System</span>
+              <span className="text-code-grey">Trading Signals.</span>
+              <br />
+              <span className="text-data-white">Built as a System.</span>
             </h1>
 
             <p className="mt-6 text-xl sm:text-2xl text-code-grey font-light leading-relaxed max-w-2xl">
-              Rule-based BTC signal infrastructure built for disciplined execution.
-              <br />
-              <span className="text-data-white font-medium">
-                Live-tested. Structured. Designed to reduce emotional decision-making.
-              </span>
+              Systematic trading signals based on EMA, RSI, and breakout logic.
+              Designed for consistent, rule-based execution.
             </p>
 
-            <p className="mt-6 text-code-grey/70 leading-relaxed max-w-xl">
-              Tbot System evaluates BTC market structure on a defined{' '}
-              <span className="syntax-highlight">1H</span> framework using{' '}
-              <span className="syntax-highlight">EMA</span>,{' '}
-              <span className="syntax-highlight">RSI</span>, and{' '}
-              <span className="syntax-highlight">breakout</span> filters with
-              pre-set risk controls, monitored logic, and beta reporting.
+            <p className="mt-5 text-code-grey/60 leading-relaxed max-w-xl">
+              Currently in private beta. Signals are delivered via Telegram for
+              manual execution and ongoing evaluation.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <a
-                href="https://buy.stripe.com/14A28r2VKcRv67ucvNb3q00"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-[#00FF9C] text-black px-6 py-3 rounded-xl font-bold hover:opacity-80 transition"
+              <Link
+                to="/register"
+                className="group inline-flex items-center gap-2 border-2 border-neon text-neon font-inter font-semibold px-6 py-3 rounded-lg hover:bg-neon hover:text-void transition-all duration-300 text-sm tracking-wide"
               >
                 Join Beta
-              </a>
+                <ArrowRight
+                  size={16}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </Link>
               <a
                 href="#metrics"
                 className="inline-flex items-center gap-2 border-2 border-card-border text-code-grey font-inter font-medium px-6 py-3 rounded-lg hover:border-code-grey/50 hover:text-data-white transition-all duration-300 text-sm"
               >
                 <Play size={14} />
-                Review Current Metrics
+                View Live Results
               </a>
+            </div>
+
+            <div className="mt-6 max-w-md">
+              <BetaAvailability />
             </div>
 
             {/* Mini stats */}

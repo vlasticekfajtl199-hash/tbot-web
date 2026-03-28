@@ -14,8 +14,8 @@ const routeCards = [
   {
     title: 'Private Beta',
     description: 'Review the beta access details, what is included, and how onboarding works.',
-    to: '/beta',
-    label: 'Open Beta',
+    to: '/register',
+    label: 'Join Beta',
   },
   {
     title: 'FAQ',
@@ -36,9 +36,9 @@ export default function Home() {
     <div className="min-h-screen bg-void text-data-white">
       <NavBar />
       <Hero />
-      <HowItWorks />
       <LiveMetrics />
       <SignalPreview />
+      <HowItWorks />
       <SystemSection />
       <Roadmap />
       <LiveLog />

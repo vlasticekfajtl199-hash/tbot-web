@@ -1,6 +1,12 @@
 import { Send, Mail } from 'lucide-react';
 import developerProfile from '@/assets/developer-profile.jpg';
 
+const trustPoints = [
+  'Primary support via Telegram',
+  'Fast response during beta phase',
+  'Business inquiries available by email',
+];
+
 export default function Contact() {
   return (
     <section id="contact" className="relative py-32 px-6">
@@ -15,50 +21,67 @@ export default function Contact() {
               Contact
             </h2>
             <p className="mt-4 text-code-grey text-lg leading-relaxed max-w-xl">
-              Questions about the system, beta access, or how the signals work?
-              Reach out directly for a clear answer and next steps.
+              If you have questions about beta access, support, or collaboration,
+              you can reach out through the channels below.
             </p>
+
+            <div className="mt-8 monolith-card rounded-lg p-6">
+              <div className="space-y-4">
+                {trustPoints.map((point) => (
+                  <div key={point} className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full bg-neon mt-2 shrink-0" />
+                    <span className="text-code-grey leading-relaxed">{point}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             <div className="mt-12 space-y-6">
               <a
                 href="https://t.me/tbotsystem"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 group"
+                className="flex items-start gap-4 group"
               >
-                <div className="w-12 h-12 rounded-lg border border-card-border flex items-center justify-center group-hover:border-neon/30 transition-colors">
+                <div className="w-12 h-12 rounded-lg border border-card-border flex items-center justify-center group-hover:border-neon/30 transition-colors shrink-0">
                   <Send size={18} className="text-neon" />
                 </div>
                 <div>
                   <div className="font-inter font-medium text-data-white group-hover:text-neon transition-colors">
-                    Telegram
+                    Open Telegram
                   </div>
-                  <div className="font-mono text-xs text-code-grey/50">
+                  <div className="font-mono text-xs text-code-grey/50 mt-1">
+                    Primary support channel · Fastest way to get in touch
+                  </div>
+                  <div className="font-mono text-xs text-code-grey/40 mt-2">
                     @tbotsystem
                   </div>
                 </div>
               </a>
 
               <a
-                href="mailto:contact@tbotsystem.com"
-                className="flex items-center gap-4 group"
+                href="mailto:support@tbotsystem.eu"
+                className="flex items-start gap-4 group"
               >
-                <div className="w-12 h-12 rounded-lg border border-card-border flex items-center justify-center group-hover:border-neon/30 transition-colors">
+                <div className="w-12 h-12 rounded-lg border border-card-border flex items-center justify-center group-hover:border-neon/30 transition-colors shrink-0">
                   <Mail size={18} className="text-neon" />
                 </div>
                 <div>
                   <div className="font-inter font-medium text-data-white group-hover:text-neon transition-colors">
-                    Email
+                    Send Email
                   </div>
-                  <div className="font-mono text-xs text-code-grey/50">
-                    contact@tbotsystem.com
+                  <div className="font-mono text-xs text-code-grey/50 mt-1">
+                    For business, support, or formal inquiries
+                  </div>
+                  <div className="font-mono text-xs text-code-grey/40 mt-2">
+                    support@tbotsystem.eu
                   </div>
                 </div>
               </a>
             </div>
 
             <p className="mt-8 font-mono text-xs text-code-grey/40">
-              Beta access is reviewed manually to keep the testing group focused and manageable.
+              Beta access and support requests are reviewed manually to keep communication focused and useful.
             </p>
           </div>
 
@@ -77,16 +100,16 @@ export default function Contact() {
                   Developer
                 </div>
                 <div className="font-mono text-xs text-code-grey/50">
-                  Independent - Full-Stack - System Design
+                  Independent - System Design - Risk-Controlled Automation
                 </div>
               </div>
             </div>
 
             <p className="text-code-grey leading-relaxed mb-6">
-              Tbot System is being developed independently with a focus on
-              structured execution, risk control, and practical automation.
-              The current beta reflects ongoing live testing, iterative
-              development, and direct feedback from early users.
+              Independent developer focused on systematic trading systems,
+              execution logic, and risk-controlled automation. Tbot is being
+              built as a long-term infrastructure project, not a short-term
+              signal product.
             </p>
 
             <div className="flex flex-wrap gap-2">
