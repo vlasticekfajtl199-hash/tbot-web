@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
+import { Analytics } from '@vercel/analytics/react'
 import { queryClientInstance } from '@/lib/query-client'
 import PageNotFound from './lib/PageNotFound'
 import Home from './pages/Home'
@@ -33,6 +34,7 @@ function App() {
         <AppRoutes />
       </Router>
       <Toaster />
+      <Analytics />
     </QueryClientProvider>
   )
 }
