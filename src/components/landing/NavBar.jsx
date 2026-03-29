@@ -30,7 +30,7 @@ export default function NavBar() {
 
         <Link
           to="/"
-          className="font-inter font-bold text-data-white tracking-tight text-lg absolute left-1/2 -translate-x-1/2"
+          className="font-inter font-bold text-data-white tracking-tight text-xl md:text-[1.35rem] absolute left-1/2 -translate-x-1/2"
         >
           tbot<span className="text-neon">.</span>
         </Link>
