@@ -6,9 +6,12 @@ import { useAuth } from '../lib/AuthContext'
 import { getUserProfile } from '../lib/userProfile'
 import { supabase } from '../supabaseClient'
 
-const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/14A28r2VKcRv67ucvNb3q00'
+// Configure this Stripe Payment Link in the Stripe dashboard.
+// Stripe-side redirect placeholders:
+// success_url = https://tbotsystem.eu/beta-success
+// cancel_url = https://tbotsystem.eu/beta
+const STRIPE_PAYMENT_URL = 'https://buy.stripe.com/14A28r2VKcRv67ucvNb3q00'
 const PROFILE_REFRESH_INTERVAL_MS = 15000
-const SIMULATE_PAYMENT_ENDPOINT = 'https://api.tbotsystem.eu/simulate-payment'
 
 function formatPaymentStatus(paymentStatus) {
   return paymentStatus === 'paid' ? 'Paid' : 'Unpaid'
@@ -26,8 +29,6 @@ export default function DashboardPage() {
   const [currentUser, setCurrentUser] = useState(null)
   const [isLoadingProfile, setIsLoadingProfile] = useState(true)
   const [profileWarning, setProfileWarning] = useState('')
-  const [requestError, setRequestError] = useState('')
-  const [isSimulatingPayment, setIsSimulatingPayment] = useState(false)
 
   const refreshProfile = async ({ showLoader = false } = {}) => {
     if (showLoader) {
@@ -77,57 +78,6 @@ export default function DashboardPage() {
     navigate('/login')
   }
 
-  const handleSimulatePaymentSuccess = async () => {
-    if (!currentUser) return
-
-    setIsSimulatingPayment(true)
-    setRequestError('')
-
-    try {
-      const response = await fetch(SIMULATE_PAYMENT_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: currentUser.id,
-        }),
-      })
-
-      const responseText = await response.text()
-      let result = null
-
-      try {
-        result = responseText ? JSON.parse(responseText) : null
-      } catch (parseError) {
-        console.error('Simulate payment response JSON parse failed:', {
-          parseError,
-          responseText,
-        })
-      }
-
-      if (!response.ok || result?.success !== true) {
-        console.error('Simulate payment request failed:', {
-          status: response.status,
-          responseText,
-          result,
-        })
-        throw new Error(result?.message || 'Simulate payment request failed.')
-      }
-
-      await refreshProfile()
-    } catch (error) {
-      console.error('Simulate payment network failure:', error)
-      setRequestError(
-        error instanceof Error
-          ? error.message
-          : 'Simulate payment request failed. Please try again.'
-      )
-    } finally {
-      setIsSimulatingPayment(false)
-    }
-  }
-
   if (isLoadingProfile || !profile) {
     return null
   }
@@ -135,8 +85,6 @@ export default function DashboardPage() {
   const isPaid = profile.payment_status === 'paid'
   const betaStatusLabel = formatBetaStatus(profile.beta_status, profile.payment_status)
   const paymentStatusLabel = formatPaymentStatus(profile.payment_status)
-  const inviteReady = profile.invite_status === 'generated'
-  const hasInviteLink = Boolean(profile.telegram_invite_link)
 
   return (
     <div className="min-h-screen bg-void text-data-white">
@@ -153,7 +101,7 @@ export default function DashboardPage() {
                 Dashboard
               </h1>
               <p className="mt-4 text-code-grey max-w-2xl leading-relaxed">
-                Review your beta account, payment state, and invite access from one place.
+                Review your beta account and payment status in one place.
               </p>
             </div>
 
@@ -169,12 +117,6 @@ export default function DashboardPage() {
           {profileWarning ? (
             <div className="mb-6 rounded-lg border border-warning-amber/20 bg-warning-amber/5 px-4 py-3 text-sm text-warning-amber">
               {profileWarning}
-            </div>
-          ) : null}
-
-          {requestError ? (
-            <div className="mb-6 rounded-lg border border-warning-amber/20 bg-warning-amber/5 px-4 py-3 text-sm text-warning-amber">
-              {requestError}
             </div>
           ) : null}
 
@@ -211,8 +153,8 @@ export default function DashboardPage() {
               </div>
               <p className="mt-4 text-code-grey leading-relaxed">
                 {isPaid
-                  ? 'Your beta access is active and payment has been recorded.'
-                  : 'Your account is registered and waiting for payment to activate beta access.'}
+                  ? 'Your payment has been received. Beta access will be delivered manually by email.'
+                  : 'Your beta access will be delivered manually after payment confirmation.'}
               </p>
             </div>
           </section>
@@ -227,39 +169,24 @@ export default function DashboardPage() {
               </div>
               <p className="mt-4 text-code-grey leading-relaxed">
                 {isPaid
-                  ? 'Payment has been recorded for this account.'
-                  : 'Payment is the next step in the beta flow. Continue to Stripe to complete access.'}
+                  ? 'Your order is complete. We will contact you soon by email with the next steps.'
+                  : 'Continue to Stripe checkout to submit your beta access order.'}
               </p>
 
               {!isPaid ? (
-                <>
-                  <a
-                    href={STRIPE_PAYMENT_LINK}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-8 inline-flex w-full items-center justify-center rounded-lg bg-neon px-6 py-4 font-inter text-sm font-semibold uppercase tracking-wide text-void hover:bg-neon/90 transition-all duration-300"
-                  >
-                    Continue to Payment
-                  </a>
-
-                  <button
-                    type="button"
-                    onClick={handleSimulatePaymentSuccess}
-                    disabled={isSimulatingPayment}
-                    className="mt-3 inline-flex w-full items-center justify-center rounded-lg border border-neon/30 px-6 py-4 font-inter text-sm font-semibold uppercase tracking-wide text-neon hover:bg-neon hover:text-void transition-all duration-300 disabled:opacity-60"
-                  >
-                    {isSimulatingPayment ? 'Updating Test Order...' : 'Simulate Payment Success'}
-                  </button>
-
-                  <p className="mt-4 text-code-grey/60 text-sm leading-relaxed">
-                    This is a temporary test flow for internal development.
-                  </p>
-                </>
+                <a
+                  href={STRIPE_PAYMENT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-8 inline-flex w-full items-center justify-center rounded-lg bg-neon px-6 py-4 font-inter text-sm font-semibold uppercase tracking-wide text-void hover:bg-neon/90 transition-all duration-300"
+                >
+                  Continue to Payment
+                </a>
               ) : (
                 <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-neon/20 bg-neon/5 px-4 py-2">
                   <div className="w-2 h-2 rounded-full bg-neon live-pulse" />
                   <span className="font-mono text-xs uppercase tracking-widest text-neon">
-                    Payment Complete
+                    Payment Received
                   </span>
                 </div>
               )}
@@ -267,59 +194,21 @@ export default function DashboardPage() {
 
             <div className="monolith-card rounded-lg p-8">
               <span className="font-mono text-xs text-neon tracking-widest uppercase">
-                // Invite Access
+                // Manual Onboarding
               </span>
-
-              {isPaid ? (
-                <div className="mt-6">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-neon/20 bg-neon/5 px-3 py-1">
-                    <div className="w-2 h-2 rounded-full bg-neon live-pulse" />
-                    <span className="font-mono text-[11px] text-neon uppercase tracking-widest">
-                      Beta Access Active
-                    </span>
-                  </div>
-
-                  {inviteReady && hasInviteLink ? (
-                    <>
-                      <div className="mt-6 rounded-lg border border-card-border bg-void/40 p-5">
-                        <div className="font-mono text-xs text-code-grey/50 uppercase tracking-widest">
-                          Telegram Access
-                        </div>
-                        <p className="mt-3 text-code-grey leading-relaxed text-sm">
-                          Your private invite is ready. Open it in a new tab to continue onboarding.
-                        </p>
-                      </div>
-
-                      <a
-                        href={profile.telegram_invite_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-6 inline-flex w-full items-center justify-center rounded-lg border border-neon/30 px-6 py-4 font-inter text-sm font-semibold uppercase tracking-wide text-neon hover:bg-neon hover:text-void transition-all duration-300"
-                      >
-                        Join Telegram
-                      </a>
-                    </>
-                  ) : (
-                    <div className="mt-6 rounded-lg border border-card-border bg-void/40 p-5">
-                      <div className="font-mono text-xs text-code-grey/50 uppercase tracking-widest">
-                        Telegram Access
-                      </div>
-                      <p className="mt-3 text-code-grey leading-relaxed text-sm">
-                        Access is being prepared.
-                      </p>
-                    </div>
-                  )}
+              <div className="mt-6 rounded-lg border border-card-border bg-void/40 p-5">
+                <div className="font-mono text-xs text-code-grey/50 uppercase tracking-widest">
+                  Delivery Method
                 </div>
-              ) : (
-                <div className="mt-6 rounded-lg border border-card-border bg-void/40 p-5">
-                  <div className="font-mono text-xs text-code-grey/50 uppercase tracking-widest">
-                    Telegram Access
-                  </div>
-                  <p className="mt-3 text-code-grey leading-relaxed text-sm">
-                    Invite access appears automatically after payment is confirmed on your account.
-                  </p>
-                </div>
-              )}
+                <p className="mt-3 text-code-grey leading-relaxed text-sm">
+                  Beta access is currently delivered manually after payment confirmation.
+                  We will review the order in Stripe and contact you by email with the next steps.
+                </p>
+              </div>
+
+              <p className="mt-4 text-code-grey/60 text-sm leading-relaxed">
+                Please make sure your payment email matches the account email shown above.
+              </p>
             </div>
           </section>
         </div>
