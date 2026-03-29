@@ -1,20 +1,17 @@
-import { Link } from 'react-router-dom';
-import NavBar from '../components/landing/NavBar';
-import Hero from '../components/landing/Hero';
-import HowItWorks from '../components/landing/HowItWorks';
-import LiveMetrics from '../components/landing/LiveMetrics';
-import SignalPreview from '../components/landing/SignalPreview';
-import SystemSection from '../components/landing/SystemSection';
-import Roadmap from '../components/landing/Roadmap';
-import LiveLog from '../components/landing/LiveLog';
-import Donate from '../components/landing/Donate';
-import Footer from '../components/landing/Footer';
+import { Link } from 'react-router-dom'
+import NavBar from '../components/landing/NavBar'
+import Hero from '../components/landing/Hero'
+import HowItWorks from '../components/landing/HowItWorks'
+import LiveMetrics from '../components/landing/LiveMetrics'
+import SystemSection from '../components/landing/SystemSection'
+import Footer from '../components/landing/Footer'
+import Reveal from '../components/Reveal'
 
 const routeCards = [
   {
     title: 'Private Beta',
     description: 'Review the beta access details, what is included, and how onboarding works.',
-    to: '/register',
+    to: '/beta',
     label: 'Join Beta',
   },
   {
@@ -29,41 +26,50 @@ const routeCards = [
     to: '/contact',
     label: 'Open Contact',
   },
-];
+  {
+    title: 'Roadmap',
+    description: 'See the current launch stages, planned rollout, and where the system is heading next.',
+    to: '/roadmap',
+    label: 'Open Roadmap',
+  },
+]
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-void text-data-white">
       <NavBar />
       <Hero />
-      <LiveMetrics />
-      <SignalPreview />
-      <HowItWorks />
-      <SystemSection />
-      <Roadmap />
-      <LiveLog />
+      <Reveal as="div">
+        <LiveMetrics />
+      </Reveal>
+      <Reveal as="div" delay={80}>
+        <HowItWorks />
+      </Reveal>
+      <Reveal as="div" delay={120}>
+        <SystemSection />
+      </Reveal>
 
-      <section className="relative py-32 px-6">
+      <Reveal as="section" delay={140} className="relative py-32 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
             <span className="font-mono text-xs text-neon tracking-widest uppercase">
               // Navigation
             </span>
-            <h2 className="mt-4 font-inter font-bold text-4xl md:text-5xl text-data-white leading-tight">
+            <h2 className="section-heading mt-4 font-inter font-bold text-4xl md:text-5xl leading-tight">
               Explore More
             </h2>
-            <p className="mt-4 text-code-grey max-w-2xl text-lg leading-relaxed">
+            <p className="section-copy mt-4 max-w-2xl text-lg leading-relaxed">
               Access the detailed FAQ, beta information, and contact page through
               dedicated routes while keeping the core landing experience focused.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {routeCards.map((card) => (
               <Link
                 key={card.to}
                 to={card.to}
-                className="monolith-card rounded-lg p-8 group hover:border-neon/20 transition-all duration-500 block"
+                className="premium-card rounded-2xl p-8 group block reveal-up"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -74,7 +80,7 @@ export default function Home() {
                       {card.description}
                     </p>
                   </div>
-                  <span className="font-mono text-xs text-neon tracking-widest uppercase">
+                  <span className="font-mono text-xs text-neon tracking-widest uppercase self-start">
                     {card.label}
                   </span>
                 </div>
@@ -82,10 +88,9 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
-      <Donate />
       <Footer />
     </div>
-  );
+  )
 }

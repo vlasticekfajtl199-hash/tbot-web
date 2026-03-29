@@ -1,6 +1,5 @@
 import { ArrowRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import BetaAvailability from './BetaAvailability';
 
 export default function Hero() {
   return (
@@ -10,40 +9,42 @@ export default function Hero() {
 
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-void via-transparent to-void pointer-events-none" />
+      <div className="absolute inset-x-0 top-0 h-[34rem] pointer-events-none bg-[radial-gradient(circle_at_28%_28%,rgba(0,255,156,0.16),transparent_34%)]" />
+      <div className="absolute right-[8%] top-[16%] h-[22rem] w-[22rem] rounded-full bg-[radial-gradient(circle,rgba(0,255,156,0.08),transparent_70%)] blur-3xl pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left: Content (60%) */}
           <div className="lg:col-span-7">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6 reveal-up">
               <div className="w-2 h-2 rounded-full bg-neon live-pulse" />
               <span className="font-mono text-xs text-neon tracking-wider uppercase">
                 Private Beta Access
               </span>
             </div>
 
-            <h1 className="font-inter font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-data-white leading-none tracking-tight">
+            <h1 className="reveal-up stagger-1 font-inter font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-data-white leading-none tracking-tight">
               Automated BTC
               <br />
-              <span className="text-code-grey">Trading Signals.</span>
+              <span className="text-slate-300">Trading Signals.</span>
               <br />
               <span className="text-data-white">Built as a System.</span>
             </h1>
 
-            <p className="mt-6 text-xl sm:text-2xl text-code-grey font-light leading-relaxed max-w-2xl">
+            <p className="reveal-up stagger-2 mt-6 text-xl sm:text-2xl text-slate-300 font-light leading-relaxed max-w-2xl">
               Systematic trading signals based on EMA, RSI, and breakout logic.
               Designed for consistent, rule-based execution.
             </p>
 
-            <p className="mt-5 text-code-grey/60 leading-relaxed max-w-xl">
+            <p className="reveal-up stagger-3 mt-5 text-code-grey/70 leading-relaxed max-w-xl">
               Currently in private beta. Signals are delivered via Telegram for
               manual execution and ongoing evaluation.
             </p>
 
-            <div className="mt-10 flex flex-wrap items-center gap-4">
+            <div className="reveal-up stagger-4 mt-10 flex flex-wrap items-center gap-4">
               <Link
-                to="/register"
-                className="group inline-flex items-center gap-2 border-2 border-neon text-neon font-inter font-semibold px-6 py-3 rounded-lg hover:bg-neon hover:text-void transition-all duration-300 text-sm tracking-wide"
+                to="/beta"
+                className="premium-button group inline-flex items-center gap-2 font-inter font-semibold px-6 py-3 rounded-xl text-sm tracking-wide"
               >
                 Join Beta
                 <ArrowRight
@@ -53,19 +54,15 @@ export default function Hero() {
               </Link>
               <a
                 href="#metrics"
-                className="inline-flex items-center gap-2 border-2 border-card-border text-code-grey font-inter font-medium px-6 py-3 rounded-lg hover:border-code-grey/50 hover:text-data-white transition-all duration-300 text-sm"
+                className="premium-outline-button inline-flex items-center gap-2 font-inter font-medium px-6 py-3 rounded-xl text-sm"
               >
                 <Play size={14} />
                 View Live Results
               </a>
             </div>
 
-            <div className="mt-6 max-w-md">
-              <BetaAvailability />
-            </div>
-
             {/* Mini stats */}
-            <div className="mt-12 flex flex-wrap items-center gap-6 sm:gap-8">
+            <div className="reveal-up stagger-4 mt-12 flex flex-wrap items-center gap-6 sm:gap-8">
               <div>
                 <span className="font-mono text-2xl text-data-white font-bold">1H</span>
                 <span className="block font-mono text-xs text-code-grey/40 mt-1 uppercase tracking-wide">
@@ -90,10 +87,10 @@ export default function Hero() {
           </div>
 
           {/* Right: Image (40%) */}
-          <div className="lg:col-span-5">
-            <div className="monolith-card rounded-lg overflow-hidden">
+          <div className="lg:col-span-5 reveal-up stagger-2">
+            <div className="premium-card rounded-[24px] overflow-hidden">
               {/* Window header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-card-border bg-void/50">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-card-border/70 bg-void/60 backdrop-blur-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500/60" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
@@ -109,7 +106,7 @@ export default function Hero() {
                 <img
                   src="https://media.base44.com/images/public/69c62a8ab79adf6ea143f745/3f1ad0c90_generated_684b7a7e.png"
                   alt="Developer workspace"
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-cover object-center transition-transform duration-700 ease-out hover:scale-[1.02]"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-void via-void/40 to-transparent pointer-events-none" />
@@ -127,7 +124,7 @@ export default function Hero() {
               </div>
             </div>
 
-            <p className="mt-4 font-mono text-xs text-code-grey/30 text-center">
+            <p className="mt-4 font-mono text-xs text-code-grey/40 text-center">
               Real operating environment: Python execution, VPS deployment, exchange APIs
             </p>
           </div>

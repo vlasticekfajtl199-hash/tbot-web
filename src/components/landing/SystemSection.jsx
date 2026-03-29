@@ -13,8 +13,8 @@ const features = [
   },
   {
     icon: Radio,
-    title: 'Live Market Processing',
-    description: 'Processes live market data and evaluates setups in real time within the defined BTC framework.',
+    title: 'Execution',
+    description: 'Trading execution powered by Deribit infrastructure.',
   },
   {
     icon: Shield,
@@ -29,7 +29,7 @@ export default function SystemSection() {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left: Content */}
-          <div>
+          <div className="reveal-up">
             <span className="font-mono text-xs text-neon tracking-widest uppercase">
               // Infrastructure
             </span>
@@ -44,8 +44,8 @@ export default function SystemSection() {
 
             <div className="space-y-6">
               {features.map((feature, i) => (
-                <div key={i} className="flex items-start gap-4">
-                  <div className="w-10 h-10 shrink-0 rounded-lg border border-card-border flex items-center justify-center">
+                <div key={i} className={`premium-card rounded-2xl p-5 flex items-start gap-4 reveal-up ${i < 2 ? 'stagger-1' : 'stagger-2'}`}>
+                  <div className="w-10 h-10 shrink-0 rounded-xl border border-card-border flex items-center justify-center bg-void/40">
                     <feature.icon size={18} className="text-neon" />
                   </div>
                   <div>
@@ -62,8 +62,8 @@ export default function SystemSection() {
           </div>
 
           {/* Right: Code block */}
-          <div className="monolith-card rounded-lg overflow-hidden">
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-card-border">
+          <div className="premium-card rounded-[24px] overflow-hidden reveal-up stagger-2">
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-card-border bg-void/50 backdrop-blur-sm">
               <div className="w-3 h-3 rounded-full bg-red-500/60" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
               <div className="w-3 h-3 rounded-full bg-green-500/60" />

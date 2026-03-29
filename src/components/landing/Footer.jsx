@@ -1,4 +1,17 @@
 import { Link } from 'react-router-dom';
+import paymentVisa from '@/assets/payment-visa.png'
+import paymentMastercard from '@/assets/payment-mastercard.png'
+import paymentSepa from '@/assets/payment-sepa.png'
+import paymentGooglePay from '@/assets/payment-google-pay.png'
+import paymentApplePay from '@/assets/payment-apple-pay.png'
+
+const paymentMethods = [
+  { title: 'Visa', image: paymentVisa, alt: 'Visa payment method' },
+  { title: 'Mastercard', image: paymentMastercard, alt: 'Mastercard payment method' },
+  { title: 'SEPA', image: paymentSepa, alt: 'SEPA payment method' },
+  { title: 'Google Pay', image: paymentGooglePay, alt: 'Google Pay payment method' },
+  { title: 'Apple Pay', image: paymentApplePay, alt: 'Apple Pay payment method' },
+]
 
 export default function Footer() {
   return (
@@ -14,31 +27,62 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-8 text-sm">
-            <Link
-              to="/"
-              className="text-code-grey/50 hover:text-code-grey transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              to="/beta"
-              className="text-code-grey/50 hover:text-code-grey transition-colors"
-            >
-              Beta
-            </Link>
-            <Link
-              to="/faq"
-              className="text-code-grey/50 hover:text-code-grey transition-colors"
-            >
-              FAQ
-            </Link>
-            <Link
-              to="/contact"
-              className="text-code-grey/50 hover:text-code-grey transition-colors"
-            >
-              Contact
-            </Link>
+          <div>
+            <div className="flex flex-wrap gap-8 text-sm">
+              <Link
+                to="/"
+                className="text-code-grey/50 hover:text-code-grey transition-colors"
+              >
+                Home
+              </Link>
+              <Link
+                to="/beta"
+                className="text-code-grey/50 hover:text-code-grey transition-colors"
+              >
+                Beta
+              </Link>
+              <Link
+                to="/faq"
+                className="text-code-grey/50 hover:text-code-grey transition-colors"
+              >
+                FAQ
+              </Link>
+              <Link
+                to="/contact"
+                className="text-code-grey/50 hover:text-code-grey transition-colors"
+              >
+                Contact
+              </Link>
+              <Link
+                to="/roadmap"
+                className="text-code-grey/50 hover:text-code-grey transition-colors"
+              >
+                Roadmap
+              </Link>
+              <Link
+                to="/support"
+                className="text-code-grey/50 hover:text-code-grey transition-colors"
+              >
+                Support
+              </Link>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              {paymentMethods.map((method) => (
+                <div
+                  key={method.title}
+                  className="premium-card w-16 rounded-[16px] p-2 hover:-translate-y-0.5"
+                >
+                  <div className="overflow-hidden rounded-[12px]">
+                    <img
+                      src={method.image}
+                      alt={method.alt}
+                      className="w-full aspect-square object-cover"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

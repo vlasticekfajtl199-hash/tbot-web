@@ -53,10 +53,10 @@ export default function HowItWorks() {
           {cards.map((card, i) => (
             <div
               key={i}
-              className="monolith-card rounded-lg p-8 group hover:border-neon/20 transition-all duration-500"
+              className={`premium-card rounded-2xl p-8 group reveal-up ${i % 2 === 0 ? 'stagger-1' : 'stagger-2'}`}
             >
               <div className="flex items-start justify-between mb-6">
-                <div className="w-12 h-12 rounded-lg border border-card-border flex items-center justify-center group-hover:border-neon/30 transition-colors">
+                <div className="w-12 h-12 rounded-xl border border-card-border flex items-center justify-center bg-void/40 group-hover:border-neon/30 transition-colors">
                   <card.icon size={20} className="text-neon" />
                 </div>
                 <span className="font-mono text-xs text-code-grey/60 tracking-widest">
@@ -66,7 +66,7 @@ export default function HowItWorks() {
               <h3 className="font-inter font-semibold text-xl text-data-white mb-3">
                 {card.title}
               </h3>
-              <p className="text-code-grey leading-relaxed mb-6">
+              <p className="text-code-grey/90 leading-relaxed mb-6">
                 {card.description}
               </p>
               <div className="flex flex-wrap gap-2">

@@ -38,10 +38,10 @@
     --void: #0B0F14;
     --neon: #00FF9C;
     --data-white: #F8FAFC;
-    --code-grey: #94A3B8;
+    --code-grey: #A3B3C7;
     --warning-amber: #FBBF24;
-    --card-border: #1E293B;
-    --card-glow: rgba(0, 255, 156, 0.06);
+    --card-border: #243244;
+    --card-glow: rgba(0, 255, 156, 0.08);
 
     --sidebar-background: 210 18% 8%;
     --sidebar-foreground: 215 20% 65%;
@@ -120,6 +120,82 @@
   box-shadow: inset 0 0 2px var(--card-glow), 0 0 20px rgba(0, 255, 156, 0.03);
 }
 
+.premium-card {
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%),
+    linear-gradient(135deg, rgba(11, 15, 20, 0.96), rgba(15, 23, 35, 0.88));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    inset 0 0 2px var(--card-glow),
+    0 10px 40px rgba(0, 0, 0, 0.22),
+    0 0 18px rgba(0, 255, 156, 0.03);
+  transition:
+    transform 300ms ease,
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    background 300ms ease;
+}
+
+.premium-card:hover {
+  border-color: rgba(0, 255, 156, 0.26);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 16px 48px rgba(0, 0, 0, 0.28),
+    0 0 24px rgba(0, 255, 156, 0.08);
+}
+
+.section-heading {
+  color: #ffffff;
+}
+
+.section-copy {
+  color: #b7c4d8;
+}
+
+.premium-button {
+  background: linear-gradient(135deg, #00ff9c, #3dffb6);
+  color: var(--void);
+  box-shadow: 0 0 12px rgba(0, 255, 156, 0.14);
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    filter 220ms ease,
+    background 220ms ease;
+}
+
+.premium-button:hover {
+  filter: brightness(1.03);
+  box-shadow: 0 0 24px rgba(0, 255, 156, 0.32);
+}
+
+.premium-button:active {
+  transform: scale(0.98);
+}
+
+.premium-outline-button {
+  border: 1px solid rgba(0, 255, 156, 0.3);
+  background: rgba(0, 255, 156, 0.04);
+  color: var(--neon);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease,
+    color 220ms ease;
+}
+
+.premium-outline-button:hover {
+  background: rgba(0, 255, 156, 0.1);
+  border-color: rgba(0, 255, 156, 0.5);
+  box-shadow: 0 0 18px rgba(0, 255, 156, 0.14);
+}
+
+.premium-outline-button:active {
+  transform: scale(0.98);
+}
+
 /* Neon glow text */
 .neon-glow {
   text-shadow: 0 0 20px rgba(0, 255, 156, 0.3), 0 0 40px rgba(0, 255, 156, 0.1);
@@ -163,6 +239,39 @@
 
 .fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-up {
+  opacity: 0;
+  animation: revealUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.stagger-1 {
+  animation-delay: 0.08s;
+}
+
+.stagger-2 {
+  animation-delay: 0.16s;
+}
+
+.stagger-3 {
+  animation-delay: 0.24s;
+}
+
+.stagger-4 {
+  animation-delay: 0.32s;
 }
 
 /* Scrollbar styling */

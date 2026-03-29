@@ -1,28 +1,22 @@
 import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../lib/AuthContext'
+import { Link, useLocation } from 'react-router-dom'
+import LiveBtcPrice from './LiveBtcPrice'
 
 const navLinks = [
   { label: 'FAQ', to: '/faq' },
   { label: 'Contact', to: '/contact' },
+  { label: 'Roadmap', to: '/roadmap' },
+  { label: 'Support', to: '/support' },
   { label: 'Beta', to: '/beta' },
 ]
 
 export default function NavBar() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
-  const navigate = useNavigate()
-  const { user, signOut } = useAuth()
-
-  const handleLogout = async () => {
-    await signOut()
-    setOpen(false)
-    navigate('/login')
-  }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-card-border/50 backdrop-blur-xl bg-void/80">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-card-border/50 bg-void/70 backdrop-blur-[10px] shadow-[0_10px_30px_rgba(0,0,0,0.18)]">
       <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
@@ -31,9 +25,7 @@ export default function NavBar() {
               Beta Live
             </span>
           </div>
-          <span className="hidden sm:block font-mono text-xs text-code-grey">
-            BTC/USDT - 1H - Rule-Based Signals
-          </span>
+          <LiveBtcPrice />
         </div>
 
         <Link
@@ -49,59 +41,25 @@ export default function NavBar() {
               <Link
                 key={link.to}
                 to={link.to}
-                className={`font-inter text-xs tracking-wide uppercase transition-colors ${
+                className={`relative font-inter text-xs tracking-wide uppercase transition-colors ${
                   location.pathname === link.to
                     ? 'text-neon'
                     : 'text-code-grey hover:text-data-white'
                 }`}
               >
-                {link.label}
+                <span>{link.label}</span>
+                {location.pathname === link.to ? (
+                  <span className="absolute -bottom-2 left-1/2 h-px w-full -translate-x-1/2 bg-neon shadow-[0_0_12px_rgba(0,255,156,0.7)]" />
+                ) : null}
               </Link>
             ))}
 
-            {user ? (
-              <>
-                <Link
-                  to="/dashboard"
-                  className={`font-inter text-xs tracking-wide uppercase transition-colors ${
-                    location.pathname === '/dashboard'
-                      ? 'text-neon'
-                      : 'text-code-grey hover:text-data-white'
-                  }`}
-                >
-                  Dashboard
-                </Link>
-                <div className="hidden xl:flex items-center rounded-full border border-card-border px-3 py-1 font-mono text-[11px] text-code-grey/70">
-                  {user.email}
-                </div>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="inline-flex items-center rounded-lg border border-card-border px-4 py-2 font-inter text-xs font-medium uppercase tracking-wide text-code-grey hover:text-data-white hover:border-code-grey/40 transition-all duration-300"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className={`font-inter text-xs tracking-wide uppercase transition-colors ${
-                    location.pathname === '/login'
-                      ? 'text-neon'
-                      : 'text-code-grey hover:text-data-white'
-                  }`}
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="inline-flex items-center rounded-lg border border-neon/40 px-4 py-2 font-inter text-xs font-medium uppercase tracking-wide text-neon hover:bg-neon hover:text-void transition-all duration-300"
-                >
-                  Join Beta
-                </Link>
-              </>
-            )}
+            <Link
+              to="/beta"
+              className="premium-button inline-flex items-center rounded-xl px-4 py-2 font-inter text-xs font-medium uppercase tracking-wide"
+            >
+              Join Beta
+            </Link>
           </div>
 
           <button
@@ -128,44 +86,13 @@ export default function NavBar() {
               </Link>
             ))}
 
-            {user ? (
-              <>
-                <Link
-                  to="/dashboard"
-                  onClick={() => setOpen(false)}
-                  className="font-inter text-sm text-code-grey hover:text-data-white transition-colors py-2"
-                >
-                  Dashboard
-                </Link>
-                <div className="rounded-lg border border-card-border px-4 py-3 font-mono text-xs text-code-grey/70">
-                  {user.email}
-                </div>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="mt-2 inline-flex items-center justify-center rounded-lg border border-card-border px-4 py-3 font-inter text-sm font-medium uppercase tracking-wide text-code-grey hover:text-data-white hover:border-code-grey/40 transition-all duration-300"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  onClick={() => setOpen(false)}
-                  className="font-inter text-sm text-code-grey hover:text-data-white transition-colors py-2"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setOpen(false)}
-                  className="mt-2 inline-flex items-center justify-center rounded-lg border border-neon/40 px-4 py-3 font-inter text-sm font-medium uppercase tracking-wide text-neon hover:bg-neon hover:text-void transition-all duration-300"
-                >
-                  Join Beta
-                </Link>
-              </>
-            )}
+            <Link
+              to="/beta"
+              onClick={() => setOpen(false)}
+              className="premium-button mt-2 inline-flex items-center justify-center rounded-xl px-4 py-3 font-inter text-sm font-medium uppercase tracking-wide"
+            >
+              Join Beta
+            </Link>
           </div>
         </div>
       )}
